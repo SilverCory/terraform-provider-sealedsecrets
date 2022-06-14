@@ -3,34 +3,28 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-provider-scaffolding/encryption"
 )
 
 func init() {
-	// Set descriptions to support markdown syntax, this will be used in document generation
-	// and the language server.
-	schema.DescriptionKind = schema.StringMarkdown
-
-	// Customize the content of descriptions when output. For example you can add defaults on
-	// to the exported descriptions if present.
-	// schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
-	// 	desc := s.Description
-	// 	if s.Default != nil {
-	// 		desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
-	// 	}
-	// 	return strings.TrimSpace(desc)
-	// }
+	schema.DescriptionKind = schema.StringPlain
 }
 
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		p := &schema.Provider{
-			DataSourcesMap: map[string]*schema.Resource{
-				"scaffolding_data_source": dataSourceScaffolding(),
+			Schema: map[string]*schema.Schema{
+				"private_key": {
+					Type:        schema.TypeString,
+					Required:    true,
+					DefaultFunc: schema.EnvDefaultFunc("SECRET_PRIVATE_KEY", nil),
+				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
+				"sealedsecrets_secret": resourceSealedSecretsSecret(),
 			},
 		}
 
@@ -40,18 +34,33 @@ func New(version string) func() *schema.Provider {
 	}
 }
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
-
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
-		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
-		// TODO: myClient.UserAgent = userAgent
+	return func(_ context.Context, r *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		var privateKey string
+		switch v := r.Get("private_key").(type) {
+		case string:
+			privateKey = v
+		}
 
-		return &apiClient{}, nil
+		if privateKey == "" {
+			return nil, diag.Diagnostics{diag.Diagnostic{
+				Severity:      diag.Error,
+				Summary:       "Missing private key",
+				Detail:        "The private key is not supplied",
+				AttributePath: cty.GetAttrPath("private_key"),
+			}}
+		}
+
+		enc, err := encryption.New("", privateKey)
+		if err != nil {
+			return nil, diag.Diagnostics{diag.Diagnostic{
+				Severity:      diag.Error,
+				Summary:       "Invalid private key",
+				Detail:        err.Error(),
+				AttributePath: cty.GetAttrPath("private_key"),
+			}}
+		}
+
+		return enc, nil
 	}
 }
