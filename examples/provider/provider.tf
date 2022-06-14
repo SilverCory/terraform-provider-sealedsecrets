@@ -1,3 +1,3 @@
-provider "scaffolding" {
-  # example configuration here
+provider "silvercory/sealedsecrets" {
+  private_key = "{Private Key Here}"
 }
