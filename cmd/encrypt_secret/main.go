@@ -41,7 +41,7 @@ func main() {
 		input = string(data)
 	}
 
-	fmt.Printf("%q\n", input)
+	// fmt.Printf("%q\n", input)
 
 	if input == "" {
 		_, _ = fmt.Fprintf(os.Stderr, "[WARNING] The input going to be encrypted is an empty string.\n", err)

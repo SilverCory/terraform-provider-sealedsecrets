@@ -20,6 +20,8 @@ func New(version string) func() *schema.Provider {
 				"private_key": {
 					Type:        schema.TypeString,
 					Required:    true,
+					Sensitive:   true,
+					Description: "The private key used to encrypt the data",
 					DefaultFunc: schema.EnvDefaultFunc("SECRET_PRIVATE_KEY", nil),
 				},
 			},

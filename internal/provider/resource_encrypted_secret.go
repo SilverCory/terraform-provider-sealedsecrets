@@ -21,14 +21,16 @@ func resourceSealedSecretsSecret() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"encrypted_secret": {
-				Description: "The base64 encrypted secret",
+				Description: "The base64 encoded GPG encrypted secret",
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   false,
 			},
 			"value": {
 				Description: "The secret in the flesh",
 				Type:        schema.TypeString,
 				Computed:    true,
+				Sensitive:   true,
 			},
 		},
 	}
