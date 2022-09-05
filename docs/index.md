@@ -23,4 +23,4 @@ provider "silvercory/sealedsecrets" {
 
 ### Required
 
-- `private_key` (String)
+- `private_key` (String, Sensitive) The private key used to encrypt the data

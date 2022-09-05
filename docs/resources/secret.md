@@ -17,11 +17,11 @@ A secret, shh!
 
 ### Required
 
-- `encrypted_secret` (String) The base64 encrypted secret
+- `encrypted_secret` (String) The base64 encoded GPG encrypted secret
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-- `value` (String) The secret in the flesh
+- `value` (String, Sensitive) The secret in the flesh
 
 
