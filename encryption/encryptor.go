@@ -60,7 +60,7 @@ func (e *Encryptor) DecryptString(in string) (output string, hash string, err er
 
 	output = string(data)
 
-	return output, hashString(output), nil
+	return output, hashString(in), nil
 }
 
 func (e *Encryptor) EncryptString(in string) (string, error) {
