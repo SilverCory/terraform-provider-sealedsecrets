@@ -1,4 +1,4 @@
-module github.com/hashicorp/terraform-provider-scaffolding
+module github.com/silvercory/terraform-provider-sealedsecrets
 
 go 1.17
 

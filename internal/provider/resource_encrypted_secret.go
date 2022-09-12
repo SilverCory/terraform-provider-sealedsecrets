@@ -2,11 +2,11 @@ package provider
 
 import (
 	"context"
+	"github.com/silvercory/terraform-provider-sealedsecrets/encryption"
 
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-scaffolding/encryption"
 )
 
 func resourceSealedSecretsSecret() *schema.Resource {

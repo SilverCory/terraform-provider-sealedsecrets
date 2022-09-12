@@ -3,10 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/silvercory/terraform-provider-sealedsecrets/encryption"
 	"io"
 	"os"
-
-	"github.com/hashicorp/terraform-provider-scaffolding/encryption"
 )
 
 var privateKey string

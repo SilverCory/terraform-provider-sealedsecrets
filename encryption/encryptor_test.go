@@ -1,10 +1,9 @@
 package encryption_test
 
 import (
+	"github.com/silvercory/terraform-provider-sealedsecrets/encryption"
 	"strings"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-scaffolding/encryption"
 )
 
 // Testing data.
